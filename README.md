@@ -1,5 +1,7 @@
 # 🎓 pretend_at_meeting
 
+[English](README.en.md) · **繁體中文**
+
 把「一整個資料夾的會議/演講錄影」變成：
 
 1. **每場個別摘要** （`summarize`）
@@ -105,3 +107,7 @@ python pretend_at_meeting.py summarize "D:\videos" --out "D:\ascrs_out" --only "
 
 - 每段音檔切 10 分鐘（16kHz mono wav ≈ 19MB），避開 Whisper 25MB 上限。
 - 工具來源 pipeline 衍生自 `video_summarizer`，擴充為「個別摘要 → 分章節合成 → 模擬與會簡報」。
+
+## 授權
+
+MIT — 見 [LICENSE](LICENSE)。ffmpeg 採獨立授權，未包含於本 repo。
