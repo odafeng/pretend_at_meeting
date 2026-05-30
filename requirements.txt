@@ -1,0 +1,4 @@
+openai>=1.0.0
+python-dotenv>=1.0.0
+natsort>=8.0.0
+python-pptx>=1.0.0

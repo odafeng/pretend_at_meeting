@@ -1,0 +1,23 @@
+# secrets
+.env.local
+.env
+
+# bundled ffmpeg binaries (large, GPL — provide your own)
+ffmpeg/
+
+# python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# tool outputs
+*.pptx
+slides_outline.json
+summaries/
+*.output
+
+# OS
+.DS_Store
+Thumbs.db
