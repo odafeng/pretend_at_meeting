@@ -1,4 +1,10 @@
-# 🎓 pretend_at_meeting
+# Conference to Briefing
+
+[![CI](https://github.com/odafeng/conference-to-briefing/actions/workflows/ci.yml/badge.svg)](https://github.com/odafeng/conference-to-briefing/actions/workflows/ci.yml)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+
+**把數十小時的研討會錄影，變成可查證、可續跑、可直接報告的簡報。**
 
 [English](README.en.md) · **繁體中文**
 
@@ -6,9 +12,12 @@
 
 1. **每場個別摘要** （`summarize`）
 2. **依主題分章節的總大摘要** （`synthesize`）
-3. **一份 `.pptx` 簡報**，以「我親自去開了這場會、回來分享所學」的第一人稱口吻呈現 （`slides`）
+3. **一份 `.pptx` briefing deck**，忠實標示內容來自場次錄影與模型整理（`slides`）
 
-逐部管線：`ffmpeg` 切段音訊 → OpenAI Whisper 逐字稿 → GPT 摘要。所有階段**可中斷續跑**（已存在的產物會自動略過）。
+逐部管線：`ffmpeg` 切段音訊 → OpenAI Whisper 逐字稿 → GPT 摘要。所有階段**可中斷續跑**（已存在的產物會自動略過），並保留 transcript 供人工核對。
+
+> [!NOTE]
+> 產出的簡報是 recording-based briefing，不代表使用者親自與會。重要事實與臨床結論仍應回查原始錄影或正式資料。
 
 ---
 
@@ -41,7 +50,7 @@ Windows 可至 https://www.gyan.dev/ffmpeg/builds/ 下載 essentials build。
 一鍵跑完整條：
 
 ```bash
-python pretend_at_meeting.py all "D:\videos" ^
+conference-to-briefing all "D:\videos" ^
     --meeting "ASCRS 2026 Annual Meeting" --dates "May 9-12, 2026" ^
     --out "D:\ascrs_out"
 ```
@@ -49,15 +58,15 @@ python pretend_at_meeting.py all "D:\videos" ^
 分階段執行（方便除錯或重跑單一步驟）：
 
 ```bash
-python pretend_at_meeting.py summarize  "D:\videos" --out "D:\ascrs_out"
-python pretend_at_meeting.py synthesize            --out "D:\ascrs_out" --meeting "ASCRS 2026 Annual Meeting"
-python pretend_at_meeting.py slides                --out "D:\ascrs_out" --meeting "ASCRS 2026 Annual Meeting" --dates "May 9-12, 2026"
+conference-to-briefing summarize "D:\videos" --out "D:\ascrs_out"
+conference-to-briefing synthesize --out "D:\ascrs_out" --meeting "ASCRS 2026 Annual Meeting"
+conference-to-briefing slides --out "D:\ascrs_out" --meeting "ASCRS 2026 Annual Meeting" --dates "May 9-12, 2026"
 ```
 
 只處理部分影片（測試用）：
 
 ```bash
-python pretend_at_meeting.py summarize "D:\videos" --out "D:\ascrs_out" --only "Anal Cancer"
+conference-to-briefing summarize "D:\videos" --out "D:\ascrs_out" --only "Anal Cancer"
 ```
 
 ---
@@ -106,7 +115,7 @@ python pretend_at_meeting.py summarize "D:\videos" --out "D:\ascrs_out" --only "
 ## 注意
 
 - 每段音檔切 10 分鐘（16kHz mono wav ≈ 19MB），避開 Whisper 25MB 上限。
-- 工具來源 pipeline 衍生自 `video_summarizer`，擴充為「個別摘要 → 分章節合成 → 模擬與會簡報」。
+- 工具來源 pipeline 衍生自 `video_summarizer`，擴充為「個別摘要 → 分章節合成 → source-grounded briefing」。
 
 ## 授權
 

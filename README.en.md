@@ -1,4 +1,10 @@
-# 🎓 pretend_at_meeting
+# Conference to Briefing
+
+[![CI](https://github.com/odafeng/conference-to-briefing/actions/workflows/ci.yml/badge.svg)](https://github.com/odafeng/conference-to-briefing/actions/workflows/ci.yml)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+
+**Turn hours of recorded conference sessions into a resumable, source-grounded briefing deck.**
 
 **English** · [繁體中文](README.md)
 
@@ -6,9 +12,12 @@ Turn a whole folder of conference / lecture recordings into:
 
 1. **A per-talk summary** for every session (`summarize`)
 2. **One topic-chaptered master summary** (`synthesize`)
-3. **A styled `.pptx` deck**, narrated in the first person as if *you* attended the meeting and came back to share what you learned (`slides`)
+3. **A styled `.pptx` briefing deck** that identifies recordings and model synthesis as its sources (`slides`)
 
-Per-video pipeline: `ffmpeg` (chunked audio) → OpenAI Whisper transcript → GPT summary. Every stage is **resumable** (existing outputs are skipped).
+Per-video pipeline: `ffmpeg` (chunked audio) → OpenAI Whisper transcript → GPT summary. Every stage is **resumable** (existing outputs are skipped), and transcripts remain available for verification.
+
+> [!NOTE]
+> The output is a recording-based briefing; it does not imply that the presenter attended in person. Verify consequential claims against the recordings or official sources.
 
 ---
 
@@ -41,7 +50,7 @@ On Windows you can grab an "essentials" build from https://www.gyan.dev/ffmpeg/b
 End-to-end:
 
 ```bash
-python pretend_at_meeting.py all "D:\videos" ^
+conference-to-briefing all "D:\videos" ^
     --meeting "ASCRS 2026 Annual Meeting" --dates "May 9-12, 2026" ^
     --out "D:\ascrs_out"
 ```
@@ -49,21 +58,21 @@ python pretend_at_meeting.py all "D:\videos" ^
 Run individual stages (handy for debugging or re-running one step):
 
 ```bash
-python pretend_at_meeting.py summarize  "D:\videos" --out "D:\ascrs_out"
-python pretend_at_meeting.py synthesize            --out "D:\ascrs_out" --meeting "ASCRS 2026 Annual Meeting"
-python pretend_at_meeting.py slides                --out "D:\ascrs_out" --meeting "ASCRS 2026 Annual Meeting" --dates "May 9-12, 2026"
+conference-to-briefing summarize "D:\videos" --out "D:\ascrs_out"
+conference-to-briefing synthesize --out "D:\ascrs_out" --meeting "ASCRS 2026 Annual Meeting"
+conference-to-briefing slides --out "D:\ascrs_out" --meeting "ASCRS 2026 Annual Meeting" --dates "May 9-12, 2026"
 ```
 
 Process only some videos (for testing):
 
 ```bash
-python pretend_at_meeting.py summarize "D:\videos" --out "D:\ascrs_out" --only "Anal Cancer"
+conference-to-briefing summarize "D:\videos" --out "D:\ascrs_out" --only "Anal Cancer"
 ```
 
 Rebuild the deck design from an existing outline without calling GPT again:
 
 ```bash
-python pretend_at_meeting.py slides --out "D:\ascrs_out" --meeting "ASCRS 2026" --reuse-outline
+conference-to-briefing slides --out "D:\ascrs_out" --meeting "ASCRS 2026" --reuse-outline
 ```
 
 ---
@@ -114,7 +123,7 @@ Intermediate audio lives in `<out>/.audio_tmp` and is removed automatically afte
 
 - Audio is chunked into 10-minute segments (16 kHz mono wav ≈ 19 MB) to stay under Whisper's 25 MB limit.
 - The deck uses a deep-teal + amber design system with header bands, full-bleed chapter dividers, accent bullets, and footer page numbers (font: Microsoft JhengHei).
-- The pipeline is derived from `video_summarizer`, extended into "per-talk summaries → topic-chaptered synthesis → first-person meeting deck".
+- The pipeline is derived from `video_summarizer`, extended into "per-talk summaries → topic-chaptered synthesis → source-grounded briefing".
 
 ## License
 
